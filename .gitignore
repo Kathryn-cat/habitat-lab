@@ -87,3 +87,7 @@ data
 
 # vim
 *.swp
+
+# debugging images
+images/
+videos/

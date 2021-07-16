@@ -107,6 +107,7 @@ class RearrangeTask(NavigationTask):
             RearrangePickSuccess,
         )
 
+
         done = False
         if self.measurements.get_metrics()[RearrangePickSuccess.cls_uuid]:
             done = True
@@ -123,6 +124,8 @@ class RearrangeTask(NavigationTask):
 
         if self._is_violating_hold_constraint():
             done = True
+
+        print(f'accum_force: {self.accum_force}')
 
         if (
             self._config.FORCE_BASED
