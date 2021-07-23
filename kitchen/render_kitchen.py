@@ -24,8 +24,7 @@ import habitat_sim
 from habitat.config import Config
 from habitat.core.registry import registry
 from habitat_sim.utils import viz_utils as vut
-from kitchen.utils.visualize import make_video_cv2, simulate, simulate_and_make_vid, \
-																		save_display_sample, visualize_scene
+from kitchen.utils.visualize import simulate, visualize_image, visualize_scene
 from kitchen.utils.spawn_agent import init_agent
 from kitchen.utils.configs import make_cfg
 
@@ -43,12 +42,13 @@ if __name__ == '__main__':
 												'datasets/ReplicaCAD/configs/scenes/apt_0.scene_instance.json')
 		parser.add_argument('--scene_dataset', type=str, default=\
 												'datasets/ReplicaCAD/replicaCAD.scene_dataset_config.json')
-		parser.add_argument('--init_agent_pos', type=str, default='0 0 0.2')
+		parser.add_argument('--agent_pos', type=str, default='0 0 0')
+		parser.add_argument('--agent_ori', type=float, default=0)
 		parser.add_argument('--video_prefix', type=str, default='default')
 		args = parser.parse_args()
 
 		# split the strings in args
-		init_agent_pos = list(map(float, args.init_agent_pos.split(' ')))
+		agent_pos = list(map(float, args.agent_pos.split(' ')))
 
 		# set gpu 
 		os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
@@ -104,6 +104,7 @@ if __name__ == '__main__':
 		rigid_obj_mgr = sim.get_rigid_object_manager()
 		metadata_mediator = sim.metadata_mediator
 
-		# render the scene
-		visualize_scene(sim, args.video_prefix, width=args.width, height=args.height)
+		# spawn the agent 
+		init_agent(sim, agent_pos, args.agent_ori)
+		visualize_image(sim, args.video_prefix)
 

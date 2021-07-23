@@ -106,7 +106,9 @@ class RearrangeTask(NavigationTask):
         from habitat.tasks.rearrange.rearrange_sensors import (
             RearrangePickSuccess,
         )
-
+				# print debugging information 
+        print(f'accum_force: {self.accum_force}')
+        print(f'collisions: {self.cur_collisions}')
 
         done = False
         if self.measurements.get_metrics()[RearrangePickSuccess.cls_uuid]:
@@ -124,8 +126,6 @@ class RearrangeTask(NavigationTask):
 
         if self._is_violating_hold_constraint():
             done = True
-
-        print(f'accum_force: {self.accum_force}')
 
         if (
             self._config.FORCE_BASED
