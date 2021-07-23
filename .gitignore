@@ -91,3 +91,7 @@ data
 # debugging images
 images/
 videos/
+kitchen/results/
+kitchen/__pycache__
+kitchen/utils/__pycache__
+

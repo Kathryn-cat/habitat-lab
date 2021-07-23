@@ -82,12 +82,13 @@ if __name__ == '__main__':
 		parser.add_argument('--render_size', type=int, default=512)
 		parser.add_argument('--gpu_id', type=str, default='0')
 		parser.add_argument('--scene_path', type=str, default=\
-										    'datasets/scene_datasets/habitat-test-scenes/apartment-1.glb')
-		parser.add_argument('--init_agent_pos', type=str, default='0 0 0')
+										    'datasets/scene_datasets/coda/coda.glb')
+		parser.add_argument('--init_agent_pos', type=str, default='0 0 0.2')
+		parser.add_argument('--video_prefix', type=str, default='init_position')
 		args = parser.parse_args()
 
 		# split the strings in args
-		init_agent_pos = list(map(int, args.init_agent_pos.split(' ')))
+		init_agent_pos = list(map(float, args.init_agent_pos.split(' ')))
 
 		# set gpu 
 		os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
@@ -117,9 +118,9 @@ if __name__ == '__main__':
 		## spawn the agent at pre-defined location 
 		cfg.sim_cfg.default_agent_id = 0
 		with habitat_sim.Simulator(cfg) as sim:
-				init_agent(sim)
+				init_agent(sim, init_agent_pos)
 				# make video
 				simulate_and_make_vid(
-						sim, None, "init_position"
+						sim, None, args.video_prefix
 				)
 
