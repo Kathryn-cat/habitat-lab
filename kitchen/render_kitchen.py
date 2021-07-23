@@ -25,66 +25,26 @@ from habitat.config import Config
 from habitat.core.registry import registry
 from habitat_sim.utils import viz_utils as vut
 from kitchen.utils.visualize import make_video_cv2, simulate, simulate_and_make_vid, \
-																		save_display_sample
+																		save_display_sample, visualize_scene
 from kitchen.utils.spawn_agent import init_agent
+from kitchen.utils.configs import make_cfg
 
-## set up the simulator 
+# define global variables 
 dir_path = os.getcwd()
 data_path = os.path.join(dir_path, "datasets")
 output_path = os.path.join(dir_path, "kitchen/results")
 
-def make_cfg(settings):
-    sim_cfg = habitat_sim.SimulatorConfiguration()
-    sim_cfg.gpu_device_id = settings["gpu_id"]
-    sim_cfg.default_agent_id = settings["default_agent_id"]
-    sim_cfg.scene_id = settings["scene"]
-    sim_cfg.enable_physics = settings["enable_physics"]
-    sim_cfg.physics_config_file = settings["physics_config_file"]
-
-    # Note: all sensors must have the same resolution
-    sensor_specs = []
-
-    rgb_sensor_spec = habitat_sim.CameraSensorSpec()
-    rgb_sensor_spec.uuid = "rgb"
-    rgb_sensor_spec.sensor_type = habitat_sim.SensorType.COLOR
-    rgb_sensor_spec.resolution = [settings["height"], settings["width"]]
-    rgb_sensor_spec.position = [0.0, settings["sensor_height"], 0.0]
-    rgb_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
-    sensor_specs.append(rgb_sensor_spec)
-
-    depth_sensor_spec = habitat_sim.CameraSensorSpec()
-    depth_sensor_spec.uuid = "depth"
-    depth_sensor_spec.sensor_type = habitat_sim.SensorType.DEPTH
-    depth_sensor_spec.resolution = [settings["height"], settings["width"]]
-    depth_sensor_spec.position = [0.0, settings["sensor_height"], 0.0]
-    depth_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
-    sensor_specs.append(depth_sensor_spec)
-
-    # Here you can specify the amount of displacement in a forward action and the turn angle
-    agent_cfg = habitat_sim.agent.AgentConfiguration()
-    agent_cfg.sensor_specifications = sensor_specs
-    agent_cfg.action_space = {
-        "move_forward": habitat_sim.agent.ActionSpec(
-            "move_forward", habitat_sim.agent.ActuationSpec(amount=0.1)
-        ),
-        "turn_left": habitat_sim.agent.ActionSpec(
-            "turn_left", habitat_sim.agent.ActuationSpec(amount=10.0)
-        ),
-        "turn_right": habitat_sim.agent.ActionSpec(
-            "turn_right", habitat_sim.agent.ActuationSpec(amount=10.0)
-        ),
-    }
-
-    return habitat_sim.Configuration(sim_cfg, [agent_cfg])
-
 if __name__ == '__main__':
 		parser = argparse.ArgumentParser()
-		parser.add_argument('--render_size', type=int, default=512)
+		parser.add_argument('--width', type=int, default=1280)
+		parser.add_argument('--height', type=int, default=720)
 		parser.add_argument('--gpu_id', type=str, default='0')
-		parser.add_argument('--scene_path', type=str, default=\
-										    'datasets/scene_datasets/coda/coda.glb')
+		parser.add_argument('--scene', type=str, default=\
+												'datasets/ReplicaCAD/configs/scenes/apt_0.scene_instance.json')
+		parser.add_argument('--scene_dataset', type=str, default=\
+												'datasets/ReplicaCAD/replicaCAD.scene_dataset_config.json')
 		parser.add_argument('--init_agent_pos', type=str, default='0 0 0.2')
-		parser.add_argument('--video_prefix', type=str, default='init_position')
+		parser.add_argument('--video_prefix', type=str, default='default')
 		args = parser.parse_args()
 
 		# split the strings in args
@@ -96,11 +56,13 @@ if __name__ == '__main__':
 		settings = {
 				"gpu_id": int(args.gpu_id),
 				"max_frames": 10,
-				"width": args.render_size,
-				"height": args.render_size,
-				"scene": args.scene_path,
+				"width": args.width,
+				"height": args.height,
+				"scene": args.scene,
+				"scene_dataset": args.scene_dataset,
 				"default_agent_id": 0,
 				"sensor_height": 1.5,  # Height of sensors in meters
+				"sensor_pitch": 0,  # rotation in rads
 				"rgb": True,  # RGB sensor
 				"depth": True,  # Depth sensor
 				"seed": 1,
@@ -112,15 +74,36 @@ if __name__ == '__main__':
 				"save_png": True,
 		}
 
-		# set simulator configs 
+		## initialize simulator 
 		cfg = make_cfg(settings)
 
-		## spawn the agent at pre-defined location 
-		cfg.sim_cfg.default_agent_id = 0
-		with habitat_sim.Simulator(cfg) as sim:
-				init_agent(sim, init_agent_pos)
-				# make video
-				simulate_and_make_vid(
-						sim, None, args.video_prefix
-				)
+		global sim
+		global obj_attr_mgr
+		global prim_attr_mgr
+		global stage_attr_mgr
+		global rigid_obj_mgr
+		global metadata_mediator
+
+		sim = None
+		obj_attr_mgr = None
+		prim_attr_mgr = None
+		stage_attr_mgr = None
+		rigid_obj_mgr = None
+		metadata_mediator = None
+
+		if sim != None:
+				sim.close()
+
+		sim = habitat_sim.Simulator(cfg)
+
+		# manage attribute templates 
+		obj_attr_mgr = sim.get_object_template_manager()
+		obj_attr_mgr.load_configs(str(os.path.join(data_path, "ReplicaCAD/configs/objects")))
+		prim_attr_mgr = sim.get_asset_template_manager()
+		stage_attr_mgr = sim.get_stage_template_manager()
+		rigid_obj_mgr = sim.get_rigid_object_manager()
+		metadata_mediator = sim.metadata_mediator
+
+		# render the scene
+		visualize_scene(sim, args.video_prefix, width=args.width, height=args.height)
 

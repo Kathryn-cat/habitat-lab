@@ -116,3 +116,21 @@ def save_display_sample(
 
     plt.savefig(os.path.join(output_path, prefix + '.png'))
 
+def visualize_scene(sim, prefix, dt=15.0, width=1280, height=720):
+		observations = []
+		start_time = sim.get_world_time()
+		while sim.get_world_time() < start_time + dt:
+				sim.agents[0].scene_node.rotate(mn.Rad(mn.math.pi * 2 / (60.0 * dt)), mn.Vector3(0, 1, 0))
+				sim.step_physics(1.0 / 60.0)
+				observations.append(sim.get_sensor_observations())
+
+		# video rendering of carousel view
+		vut.make_video(
+				observations,
+				"rgb",
+				"color",
+				os.path.join(output_path, prefix),
+				open_vid=False,
+				video_dims=[width, height],
+		)
+
