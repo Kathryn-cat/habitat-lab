@@ -144,7 +144,7 @@ class RearrangePickTaskV1(RearrangeTask):
         )
 
     def step(self, action, episode):
-        action_args = action["action_args"]
+        action_args = action["action"]
 
         if self._should_prevent_grip(action_args):
             # No releasing the object once it is held.

@@ -26,7 +26,7 @@ def make_video_cv2(
     videodims = observations[0][sensor_keys[0]].shape
     videodims = (videodims[1], videodims[0])  # flip to w,h order
     print(f'videodims: {videodims}')
-    video_file = output_path + prefix + ".mp4"
+    video_file = os.path.join(output_path, prefix + ".mp4")
     print("Encoding the video: %s " % video_file)
     writer = vut.get_fast_video_writer(video_file, fps=fps)
     for ob in observations:
