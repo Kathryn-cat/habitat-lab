@@ -25,16 +25,17 @@ if __name__ == '__main__':
         visual.simulate_and_make_vid(
             sim, None, "apt_0_v1", dt=2.0
         )
-        '''
 
+        # print all objects info 
         objects.print_object_info(sim)
+        '''
 
-        '''
         # test ray casting
-        import pdb; pdb.set_trace()
-        closest_object = actions.raycast(
-            sim, "rgb", crosshair_pos=[90, 90], max_distance=10.0
+        # ensure that cast_direction is a unit vector, because max_distance is in units of ray length
+        cast_direction = mn.Vector3([0.0, -0.1, 0.0]).normalized()
+        cast_origin = mn.Vector3([-2.0298, 1.0642, 2.6329])
+        object_id, dist, point = actions.raycast(
+            sim, cast_direction, cast_origin, max_distance=0.12
         )
-        print(f"Closest Object ID: {closest_object} using 10.0 threshold")
-        '''
+        print(f"closest object id: {object_id}, distance: {dist}, point: {point}")
 
