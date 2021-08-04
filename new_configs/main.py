@@ -5,6 +5,8 @@ import magnum as mn
 import new_configs.utils.paths as paths
 import new_configs.utils.simulator as simulator
 import new_configs.utils.visualization as visual
+import new_configs.utils.new_actions as actions
+import new_configs.utils.objects as objects
 
 if __name__ == '__main__':
     cfg = simulator.make_cfg(simulator.settings)
@@ -18,8 +20,21 @@ if __name__ == '__main__':
         )
         sim.initialize_agent(agent_id=0, initial_state=initial_state)
 
+        '''
         # visualization
         visual.simulate_and_make_vid(
             sim, None, "apt_0_v1", dt=2.0
         )
+        '''
+
+        objects.print_object_info(sim)
+
+        '''
+        # test ray casting
+        import pdb; pdb.set_trace()
+        closest_object = actions.raycast(
+            sim, "rgb", crosshair_pos=[90, 90], max_distance=10.0
+        )
+        print(f"Closest Object ID: {closest_object} using 10.0 threshold")
+        '''
 
