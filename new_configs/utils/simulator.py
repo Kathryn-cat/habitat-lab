@@ -78,14 +78,3 @@ settings = {
     "agent_height": 1.5,
 }
 
-# Spawn the agent at a pre-defined location
-def init_agent(sim):
-    agent_pos = mn.Vector3(0.0, 0.0, 1.0)
-    agent_rot = mn.Deg(90)
-
-    # Place the agent
-    sim.agents[0].scene_node.translation = agent_pos
-    sim.agents[0].scene_node.rotation = mn.Quaternion.rotation(
-        agent_rot, mn.Vector3(0.0, 1.0, 0.0)
-    )
-
