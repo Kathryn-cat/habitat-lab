@@ -42,9 +42,9 @@ if __name__ == '__main__':
 												'datasets/ReplicaCAD/configs/scenes/apt_0.scene_instance.json')
 		parser.add_argument('--scene_dataset', type=str, default=\
 												'datasets/ReplicaCAD/replicaCAD.scene_dataset_config.json')
-		parser.add_argument('--agent_pos', type=str, default='0 0 0')
-		parser.add_argument('--agent_ori', type=float, default=0)
-		parser.add_argument('--video_prefix', type=str, default='default')
+		parser.add_argument('--agent_pos', type=str, default='0 0 1')
+		parser.add_argument('--agent_ori', type=float, default=90)
+		parser.add_argument('--video_prefix', type=str, default='kitchen_env')
 		args = parser.parse_args()
 
 		# split the strings in args
@@ -74,9 +74,6 @@ if __name__ == '__main__':
 				"save_png": True,
 		}
 
-		## initialize simulator 
-		cfg = make_cfg(settings)
-
 		global sim
 		global obj_attr_mgr
 		global prim_attr_mgr
@@ -94,6 +91,8 @@ if __name__ == '__main__':
 		if sim != None:
 				sim.close()
 
+		## initialize simulator 
+		cfg = make_cfg(settings)
 		sim = habitat_sim.Simulator(cfg)
 
 		# manage attribute templates 
@@ -104,7 +103,6 @@ if __name__ == '__main__':
 		rigid_obj_mgr = sim.get_rigid_object_manager()
 		metadata_mediator = sim.metadata_mediator
 
-		# spawn the agent 
+		# spawn the agent in the kitchen env
 		init_agent(sim, agent_pos, args.agent_ori)
-		visualize_image(sim, args.video_prefix)
-
+		

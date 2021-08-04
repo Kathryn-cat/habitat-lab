@@ -94,4 +94,8 @@ videos/
 kitchen/results/
 kitchen/__pycache__
 kitchen/utils/__pycache__
+tb/
+video_dir/
+episodes_text/
 
+new_configs/utils/__pycache__
