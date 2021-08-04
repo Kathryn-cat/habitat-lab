@@ -42,8 +42,8 @@ def print_object_info(sim):
             com[i], scenenode_translation[i], scenenode_rotation[i]\
         ]
         data.append(data_i)
-        headers = ["index", "object id", "handle", "motion type", "collidable", \
-                   "local collision mesh", "global com", "translation w.r.t SceneNode", \
-                   "rotation w.r.t SceneNode"]
-        print(tabulate(data, headers=headers))
+    headers = ["index", "object id", "handle", "motion type", "collidable", \
+               "local collision mesh", "global com", "translation w.r.t SceneNode", \
+               "rotation w.r.t SceneNode"]
+    print(tabulate(data, headers=headers))
 
