@@ -73,8 +73,8 @@ settings = {
     "hfov": mn.Deg(90),
     "orientation": np.array([0.0, 0.0, 0.0]),
     "sensor_height": 1.5,
-    "width": 256,
-    "height": 256,
+    "width": 512,
+    "height": 512,
     "agent_height": 1.5,
 }
 

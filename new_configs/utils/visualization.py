@@ -6,8 +6,10 @@ from typing import Any, Dict, List, Optional, Type
 import attr
 import cv2
 import git
+import skvideo.io
 import magnum as mn
 import numpy as np
+import quaternion
 import matplotlib
 matplotlib.use('agg')
 from matplotlib import pyplot as plt
@@ -111,4 +113,36 @@ def display_sample(
         plt.imshow(data)
 
     plt.show(block=False)
+
+# print agent info on its first-person camera as well as third-party camera
+def agent_motion_img(sim, obs):
+    collided = obs['collided']
+    rgb = obs['rgb'][:, :, :3][:, :, ::-1]
+    agent_pos = np.round(sim.agents[0].state.position, 4)
+    agent_rot = np.round(quaternion.as_float_array(sim.agents[0].state.rotation), 4)
+    agent_vel = np.round(sim.agents[0].state.velocity, 4)
+    agent_ang_vel = np.round(sim.agents[0].state.angular_velocity, 4)
+
+    # annotate with text
+    blank = np.zeros([850 - 512, 512, 3])
+
+    cv2.putText(blank, f'collision: {collided}', (20, 20), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'position: {agent_pos}', (20, 40), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'rotation: {agent_rot}', (20, 60), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'velocity: {agent_vel}', (20, 80), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'angular velocity: {agent_ang_vel}', (20, 100), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+
+    img = np.concatenate([rgb, blank])
+    return img
+
+def skvideo_from_imgs(imgs, filename):
+    video = np.stack(imgs, axis=0)[:, :, :, ::-1]
+    filepath = os.path.join(output_path, filename)
+    skvideo_args = dict(inputdict={'-r': str(5)}, outputdict={'-f': 'mp4', '-pix_fmt': 'yuv420p'})
+    skvideo.io.vwrite(filepath, video, **skvideo_args)
 

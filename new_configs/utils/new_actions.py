@@ -23,3 +23,5 @@ def raycast(sim, direction, origin, max_distance=0.2):
 
     return closest_object_id, closest_dist, closest_object_point
 
+# define a grab / release action
+

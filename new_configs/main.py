@@ -28,7 +28,6 @@ if __name__ == '__main__':
 
         # print all objects info 
         objects.print_object_info(sim)
-        '''
 
         # test ray casting
         # ensure that cast_direction is a unit vector, because max_distance is in units of ray length
@@ -38,4 +37,13 @@ if __name__ == '__main__':
             sim, cast_direction, cast_origin, max_distance=0.12
         )
         print(f"closest object id: {object_id}, distance: {dist}, point: {point}")
+        '''
+
+        # perform a series of robot motions and make a video
+        imgs = []
+        for i in range(12):
+            obs = sim.step('move_forward')
+            img = visual.agent_motion_img(sim, obs)
+            imgs.append(img)
+        visual.skvideo_from_imgs(imgs, 'agent_motion.mp4')
 
