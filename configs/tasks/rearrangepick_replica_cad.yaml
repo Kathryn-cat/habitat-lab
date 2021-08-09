@@ -149,4 +149,4 @@ SIMULATOR:
         WIDTH: 640
     TILT_ANGLE: 15
     TURN_ANGLE: 10
-    TYPE: RearrangeSim-v0
+    TYPE: RearrangeSim-v0 # change

@@ -115,6 +115,7 @@ class Dataset(Generic[T]):
         """
         scenes_to_load = set(config.CONTENT_SCENES)
 
+        # load scene here
         def _filter(ep: T) -> bool:
             return (
                 ALL_SCENES_MASK in scenes_to_load

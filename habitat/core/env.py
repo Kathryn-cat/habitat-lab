@@ -19,7 +19,7 @@ from habitat.core.embodied_task import EmbodiedTask, Metrics
 from habitat.core.simulator import Observations, Simulator
 from habitat.datasets import make_dataset
 from habitat.sims import make_sim
-from habitat.tasks import make_task
+from habitat.tasks import make_task # change here
 from habitat.utils import profiling_wrapper
 
 
@@ -72,7 +72,7 @@ class Env:
             "environment, use config.freeze()."
         )
         self._config = config
-        self._dataset = dataset
+        self._dataset = dataset # None
         self._current_episode_index = None
         if self._dataset is None and config.DATASET.TYPE:
             self._dataset = make_dataset(
@@ -82,7 +82,7 @@ class Env:
             self._dataset.episodes
             if self._dataset
             else cast(List[Episode], [])
-        )
+        ) # []
         self._current_episode = None
         iter_option_dict = {
             k.lower(): v
@@ -91,7 +91,7 @@ class Env:
         iter_option_dict["seed"] = config.SEED
         self._episode_iterator = self._dataset.get_episode_iterator(
             **iter_option_dict
-        )
+        ) if self._dataset else None
 
         # load the first scene if dataset is present
         if self._dataset:
@@ -106,15 +106,16 @@ class Env:
         else:
             self.number_of_episodes = None
 
+        import pdb; pdb.set_trace()
         self._sim = make_sim(
             id_sim=self._config.SIMULATOR.TYPE, config=self._config.SIMULATOR
-        )
+        ) # change here
         self._task = make_task(
             self._config.TASK.TYPE,
             config=self._config.TASK,
             sim=self._sim,
             dataset=self._dataset,
-        )
+        ) # change here 
         self.observation_space = spaces.Dict(
             {
                 **self._sim.sensor_suite.observation_spaces.spaces,

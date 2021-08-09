@@ -7,6 +7,7 @@ import new_configs.utils.simulator as simulator
 import new_configs.utils.visualization as visual
 import new_configs.utils.new_actions as actions
 import new_configs.utils.objects as objects
+import new_configs.utils.new_sims as sims
 
 if __name__ == '__main__':
     cfg = simulator.make_cfg(simulator.settings)
@@ -20,6 +21,8 @@ if __name__ == '__main__':
         )
         sim.initialize_agent(agent_id=0, initial_state=initial_state)
 
+        import pdb; pdb.set_trace()
+
         '''
         # visualization
         visual.simulate_and_make_vid(
@@ -31,8 +34,8 @@ if __name__ == '__main__':
 
         # test ray casting
         # ensure that cast_direction is a unit vector, because max_distance is in units of ray length
-        cast_direction = mn.Vector3([0.0, -0.1, 0.0]).normalized()
-        cast_origin = mn.Vector3([-2.0298, 1.0642, 2.6329])
+        cast_direction = [0.0, -0.1, 0.0]
+        cast_origin = [-2.0298, 1.0642, 2.6329]
         object_id, dist, point = actions.raycast(
             sim, cast_direction, cast_origin, max_distance=0.12
         )
