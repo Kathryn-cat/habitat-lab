@@ -41,9 +41,17 @@ if __name__ == '__main__':
 
         # perform a series of robot motions and make a video
         imgs = []
-        for i in range(30):
-            obs = sim.step('move_forward')
+        for i in range(9):
+            obs = sim.step('look_up')
             img = visual.agent_motion_img(sim, obs)
             imgs.append(img)
-        visual.skvideo_from_imgs(imgs, 'agent_motion_v1.mp4')
+        for i in range(18):
+            obs = sim.step('look_down')
+            img = visual.agent_motion_img(sim, obs)
+            imgs.append(img)
+        for i in range(9):
+            obs = sim.step('look_up')
+            img = visual.agent_motion_img(sim, obs)
+            imgs.append(img)
+        visual.skvideo_from_imgs(imgs, 'agent_motion_v4.mp4')
 

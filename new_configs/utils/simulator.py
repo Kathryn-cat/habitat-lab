@@ -2,6 +2,7 @@ import new_configs.utils.visualization
 import habitat_sim
 import numpy as np
 import magnum as mn
+import math
 
 # render RGB, depth 256 * 256 observations
 # action space: move_forward, turn_left, turn_right 
@@ -18,7 +19,7 @@ def make_cfg(settings):
     sim_cfg.scene_dataset_config_file = settings["scene_dataset"]
     sim_cfg.scene_light_setup = settings["scene_light_setup"]
 
-    # create rgb and depth sensors
+    # create rgb, depth, and third person sensors
     # Note: all sensors must have the same resolution
     sensor_specs = []
 
@@ -42,8 +43,18 @@ def make_cfg(settings):
     depth_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
     sensor_specs.append(depth_sensor_spec)
 
+    third_sensor_spec = habitat_sim.CameraSensorSpec()
+    third_sensor_spec.uuid = "third_person"
+    third_sensor_spec.sensor_type = habitat_sim.SensorType.COLOR
+    third_sensor_spec.hfov = settings["hfov"]
+    third_sensor_spec.position = np.array([0.0, 1.5, 1.0])
+    third_sensor_spec.orientation = settings["third_orientation"]
+    third_sensor_spec.resolution = np.array([settings["height"], settings["width"]])
+    third_sensor_spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
+    sensor_specs.append(third_sensor_spec)
+
     # create agent 
-    # TODO: use new actions
+    # TODO: extend the full action space 
     agent_cfg = habitat_sim.agent.AgentConfiguration()
     agent_cfg.action_space = {
         "move_forward": habitat_sim.agent.ActionSpec(
@@ -54,6 +65,12 @@ def make_cfg(settings):
         ),
         "turn_right": habitat_sim.agent.ActionSpec(
             "turn_right", habitat_sim.agent.ActuationSpec(amount=15.0, constraint=None)
+        ),
+        "look_up": habitat_sim.agent.ActionSpec(
+            "look_up", habitat_sim.agent.ActuationSpec(amount=10.0, constraint=None)
+        ),
+        "look_down": habitat_sim.agent.ActionSpec(
+            "look_down", habitat_sim.agent.ActuationSpec(amount=10.0, constraint=None)
         ),
     }
     agent_cfg.height = settings["agent_height"]
@@ -72,6 +89,7 @@ settings = {
     "scene_light_setup": "datasets/ReplicaCAD/configs/lighting/frl_apartment_0.lighting_config.json",
     "hfov": mn.Deg(90),
     "orientation": np.array([0.0, 0.0, 0.0]),
+    "third_orientation": np.array([-math.pi / 4, 0.0, 0.0]),
     "sensor_height": 1.5,
     "width": 512,
     "height": 512,
