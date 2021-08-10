@@ -273,6 +273,7 @@ class ExplSim(HabitatSim):
             self.robot.reconfigure()
         self.robot.reset()
 
+        '''
         set_pos = {}
         # Set articulated object joint states.
         if self.habitat_config.get("LOAD_ART_OBJS", True):
@@ -298,6 +299,7 @@ class ExplSim(HabitatSim):
             }
 
         self.update_i = 0
+        '''
 
     def _add_art_bbs(self):
         art_bb_ids = []
