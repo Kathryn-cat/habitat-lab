@@ -43,6 +43,7 @@ from habitat.core.simulator import (
     VisualObservation,
 )
 from habitat.core.spaces import Space
+from habitat_sim.utils.common import quat_from_magnum
 
 
 def overwrite_config(
@@ -312,6 +313,8 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
                 "sensors",
                 "start_position",
                 "start_rotation",
+                "start_rotation_axis",
+                "start_rotation_deg",
             },
         )
 
@@ -371,15 +374,19 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
     def _update_agents_state(self) -> bool:
         is_updated = False
         for agent_id, _ in enumerate(self.habitat_config.AGENTS):
+            # initialize agent here
             agent_cfg = self._get_agent_config(agent_id)
             if agent_cfg.IS_SET_START_STATE:
-                self.set_agent_state(
-                    agent_cfg.START_POSITION,
-                    agent_cfg.START_ROTATION,
-                    agent_id,
+                initial_state = self.agents[agent_id].state
+                initial_state.position = np.array(agent_cfg.START_POSITION)
+                initial_state.rotation = quat_from_magnum(
+                    mn.Quaternion.rotation(
+                        mn.Deg(agent_cfg.START_ROTATION_DEG), 
+                        mn.Vector3(agent_cfg.START_ROTATION_AXIS)
+                    )
                 )
+                self.initialize_agent(agent_id, initial_state)
                 is_updated = True
-
         return is_updated
 
     def reset(self) -> Observations:
@@ -418,6 +425,7 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
         return output
 
     def reconfigure(self, habitat_config: Config) -> None:
+        '''
         # TODO(maksymets): Switch to Habitat-Sim more efficient caching
         is_same_scene = habitat_config.SCENE == self._current_scene
         self.habitat_config = habitat_config
@@ -426,7 +434,7 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
             self._current_scene = habitat_config.SCENE
             self.close()
             super().reconfigure(self.sim_config)
-
+        '''
         self._update_agents_state()
 
     def geodesic_distance(

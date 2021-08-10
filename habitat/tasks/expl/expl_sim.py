@@ -237,17 +237,22 @@ class ExplSim(HabitatSim):
             self.renderer.acquire_gl_context()
 
     def reconfigure(self, config):
+        '''
         ep_info = config["ep_info"][0]
 
         config["SCENE"] = ep_info["scene_id"]
+        '''
         super().reconfigure(config)
 
+        '''
         self.ep_info = ep_info
         self.fixed_base = ep_info["fixed_base"]
 
         self.target_obj_ids = []
+        '''
         self.event_callbacks = []
 
+        '''
         if ep_info["scene_id"] != self.prev_scene_id:
             # Object instances are not valid between scenes.
             self.art_objs = []
@@ -261,6 +266,8 @@ class ExplSim(HabitatSim):
         self._try_acquire_context()
 
         self._add_objs(ep_info)
+        '''
+        import pdb; pdb.set_trace()
         if self.robot is None:
             self.robot = FetchRobot(self.habitat_config.ROBOT_URDF, self)
             self.robot.reconfigure()

@@ -202,6 +202,7 @@ class Env:
         self._elapsed_steps = 0
         self._episode_over = False
 
+    # TODO: implement this
     def reset(self) -> Observations:
         r"""Resets the environments and returns the initial observations.
 
@@ -209,14 +210,6 @@ class Env:
         """
         self._reset_stats()
 
-        assert len(self.episodes) > 0, "Episodes list is empty"
-        # Delete the shortest path cache of the current episode
-        # Caching it for the next time we see this episode isn't really worth
-        # it
-        if self._current_episode is not None:
-            self._current_episode._shortest_path_cache = None
-
-        self._current_episode = next(self._episode_iterator)
         self.reconfigure(self._config)
 
         observations = self.task.reset(episode=self.current_episode)
@@ -293,13 +286,7 @@ class Env:
 
     def reconfigure(self, config: Config) -> None:
         self._config = config
-
-        self._config.defrost()
-        self._config.SIMULATOR = self._task.overwrite_sim_config(
-            self._config.SIMULATOR, self.current_episode
-        )
-        self._config.freeze()
-
+        import pdb; pdb.set_trace()
         self._sim.reconfigure(self._config.SIMULATOR)
 
     def render(self, mode="rgb") -> np.ndarray:
