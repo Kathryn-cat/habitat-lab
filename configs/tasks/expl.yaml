@@ -9,7 +9,7 @@ TASK:
     FIX_BASE_TO_OBJ: None
     FORCE_BASED: True
     COUNT_OBJ_COLLISIONS: True
-    COUNT_ROBO_OBJ_COLLS: False
+    COUNT_ROBO_OBJ_COLLS: False # TODO: check its impact
 
     # In radians
     BASE_ANGLE_NOISE: 0.15
@@ -19,22 +19,6 @@ TASK:
     # robot
     EASY_INIT: False
 
-    TARGET_START_SENSOR:
-        TYPE: "TargetStartSensor"
-        GOAL_FORMAT: "CARTESIAN"
-        DIMENSIONALITY: 3
-    GOAL_SENSOR:
-        TYPE: "GoalSensor"
-        GOAL_FORMAT: "CARTESIAN"
-        DIMENSIONALITY: 3
-    ABS_TARGET_START_SENSOR:
-        TYPE: "AbsTargetStartSensor"
-        GOAL_FORMAT: "CARTESIAN"
-        DIMENSIONALITY: 3
-    ABS_GOAL_SENSOR:
-        TYPE: "AbsGoalSensor"
-        GOAL_FORMAT: "CARTESIAN"
-        DIMENSIONALITY: 3
     JOINT_SENSOR:
         TYPE: "JointSensor"
     EE_SENSOR:
@@ -43,44 +27,16 @@ TASK:
         TYPE: "IsHoldingSensor"
     LOCAL_SENSOR:
         TYPE: "LocalizationSensor"
-    SENSORS: ["TARGET_START_SENSOR", "GOAL_SENSOR", "JOINT_SENSOR", "IS_HOLDING_SENSOR", "EE_SENSOR", "LOCAL_SENSOR"]
-    OBJECT_TO_GOAL_DISTANCE:
-        TYPE: "ObjectToGoalDistance"
+    SENSORS: ["JOINT_SENSOR", "IS_HOLDING_SENSOR", "EE_SENSOR", "LOCAL_SENSOR"]
     END_EFFECTOR_TO_OBJECT_DISTANCE:
         TYPE: "EndEffectorToObjectDistance"
-
     MEASUREMENTS:
-        - "OBJECT_TO_GOAL_DISTANCE"
         - "END_EFFECTOR_TO_OBJECT_DISTANCE"
-    ACTIONS:
-        ARM_ACTION:
-            TYPE: "ArmAction"
-            ARM_CONTROLLER: "ArmVelAction"
-            GRIP_CONTROLLER: "MagicGraspAction"
-            GRASP_THRESH_DIST: 0.2
-            DISABLE_GRIP: False
-            VEL_CTRL_LIM: 0.0125
-        MAGIC_GRASP:
-            GRASP_THRESH_DIST: 0.2
-        ARM_VEL:
-            VEL_CTRL_LIM: 0.0125 
-        BASE_VEL:
-            END_ON_STOP: False
-            LIN_SPEED: 0.01
-            ANG_SPEED: 0.02
-            MIN_ABS_LIN_SPEED: 0.001
-            MIN_ABS_ANG_SPEED: 0.002
     POSSIBLE_ACTIONS:
         - STOP
         - MOVE_FORWARD
         - TURN_LEFT
         - TURN_RIGHT
-        - LOOK_UP
-        - LOOK_DOWN
-        - ARM_ACTION
-        - ARM_VEL
-        - MAGIC_GRASP
-        - BASE_VEL
 
 SIMULATOR:
     ACTION_SPACE_CONFIG: v0 # TODO: change
@@ -130,6 +86,7 @@ SIMULATOR:
         POSITION: [0, 1.25, 0]
         TYPE: HabitatSimSemanticSensor
         WIDTH: 640
+    # TODO: add third person sensor
     ARM_REST: [0.6, 0.0, 0.9]
     CTRL_FREQ: 120.0
     DEFAULT_AGENT_ID: 0
@@ -151,4 +108,6 @@ SIMULATOR:
     TILT_ANGLE: 15
     TURN_ANGLE: 10
     TYPE: ExplSim 
+
+# TODO: check for pyrobot
 

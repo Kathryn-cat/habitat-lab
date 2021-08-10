@@ -109,13 +109,12 @@ class Env:
         self._sim = make_sim(
             id_sim=self._config.SIMULATOR.TYPE, config=self._config.SIMULATOR
         )
-        import pdb; pdb.set_trace()
         self._task = make_task(
             self._config.TASK.TYPE,
             config=self._config.TASK,
             sim=self._sim,
             dataset=self._dataset,
-        ) # change here 
+        )
         self.observation_space = spaces.Dict(
             {
                 **self._sim.sensor_suite.observation_spaces.spaces,

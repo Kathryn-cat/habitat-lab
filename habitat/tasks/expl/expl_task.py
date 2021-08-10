@@ -24,7 +24,7 @@ class ExplTask(NavigationTask):
 
     def __init__(self, *args, sim, dataset=None, **kwargs) -> None:
         super().__init__(sim=sim, dataset=dataset, **kwargs)
-        self.is_gripper_closed = False
+        self.is_gripper_closed = False # TODO: change this for grasping action
         self._sim: ExplSim = sim
         self.use_max_accum_force = self._config.MAX_ACCUM_FORCE
         self._ignore_collisions: List[Any] = []

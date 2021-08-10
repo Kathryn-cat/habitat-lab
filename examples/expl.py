@@ -8,8 +8,8 @@ import habitat
 
 def expl():
     config = habitat.get_config("configs/tasks/expl.yaml")
-    import pdb; pdb.set_trace()
     with habitat.Env(config=config) as env:
+        import pdb; pdb.set_trace()
         observations = env.reset()
         count_steps = 0
         while not env.episode_over:

@@ -139,7 +139,7 @@ class ExplSim(HabitatSim):
             "data/replica_cad/configs/lighting/frl_apartment_stage.lighting_config.json"
         )
         obj_attr_mgr = self.get_object_template_manager()
-        obj_attr_mgr.load_configs("datasets/ReplicaCAD/objects/")
+        obj_attr_mgr.load_configs("datasets/ReplicaCAD/configs/objects/")
 
         self.concur_render = self.habitat_config.get(
             "CONCUR_RENDER", True
