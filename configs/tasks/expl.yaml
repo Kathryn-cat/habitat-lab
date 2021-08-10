@@ -61,25 +61,27 @@ SIMULATOR:
         HEIGHT: 512
         POSITION: [0.0, 1.5, 0.0]
         ORIENTATION: [0.0, 0.0, 0.0]
-        UUID: 'head_rgb'
+        UUID: 'robot_head_rgb'
     HEAD_DEPTH_SENSOR:
         WIDTH: 512
         HEIGHT: 512
         POSITION: [0.0, 1.5, 0.0]
         ORIENTATION: [0.0, 0.0, 0.0]
-        UUID: 'head_depth'
+        UUID: 'robot_head_depth'
         MIN_DEPTH: 0.0
         MAX_DEPTH: 10.0
         NORMALIZE_DEPTH: True
     ARM_DEPTH_SENSOR: # TODO: modify arm height
+        WIDTH: 512
         HEIGHT: 512
+        UUID: 'robot_arm_depth'
         MAX_DEPTH: 10.0
         MIN_DEPTH: 0.0
         NORMALIZE_DEPTH: True
-        WIDTH: 512
     ARM_RGB_SENSOR:
         HEIGHT: 512
         WIDTH: 512
+        UUID: 'robot_arm_rgb'
     SEMANTIC_SENSOR:
         HEIGHT: 480
         HFOV: 90

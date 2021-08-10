@@ -268,9 +268,11 @@ class ExplSim(HabitatSim):
 
         self._add_objs(ep_info)
         '''
-        import pdb; pdb.set_trace()
+        # TODO: change robot function call type if possible
+        # where is self.robot used?
         if self.robot is None:
-            self.robot = FetchRobot(self.habitat_config.ROBOT_URDF, self)
+            self.robot = FetchRobot(self.habitat_config.ROBOT_URDF, self, \
+                                    limit_robo_joints=True, fixed_base=False)
             self.robot.reconfigure()
         self.robot.reset()
 

@@ -202,7 +202,6 @@ class Env:
         self._elapsed_steps = 0
         self._episode_over = False
 
-    # TODO: implement this
     def reset(self) -> Observations:
         r"""Resets the environments and returns the initial observations.
 
@@ -212,6 +211,7 @@ class Env:
 
         self.reconfigure(self._config)
 
+        import pdb; pdb.set_trace()
         observations = self.task.reset(episode=self.current_episode)
         self._task.measurements.reset_measures(
             episode=self.current_episode,
@@ -286,7 +286,6 @@ class Env:
 
     def reconfigure(self, config: Config) -> None:
         self._config = config
-        import pdb; pdb.set_trace()
         self._sim.reconfigure(self._config.SIMULATOR)
 
     def render(self, mode="rgb") -> np.ndarray:
