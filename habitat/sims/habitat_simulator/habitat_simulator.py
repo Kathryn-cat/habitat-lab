@@ -18,6 +18,7 @@ from typing import (
 )
 
 import numpy as np
+import magnum as mn
 from gym import spaces
 from gym.spaces.box import Box
 from numpy import ndarray
@@ -267,8 +268,10 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
             sim_sensors.append(sensor_type(sensor_cfg))
 
         self._sensor_suite = SensorSuite(sim_sensors)
+        # should match the info in my own simulator
         self.sim_config = self.create_sim_config(self._sensor_suite)
         self._current_scene = self.sim_config.sim_cfg.scene_id
+        # initialize the sim
         super().__init__(self.sim_config)
         self._action_space = spaces.Discrete(
             len(self.sim_config.agents[0].action_space)
@@ -285,12 +288,19 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
                 "Incompatible version of Habitat-Sim detected, please upgrade habitat_sim"
             )
         overwrite_config(
-            config_from=self.habitat_config.HABITAT_SIM_V0,
+            config_from=self.habitat_config.EXPL_SIM,
             config_to=sim_config,
             # Ignore key as it gets propogated to sensor below
             ignore_keys={"gpu_gpu"},
         )
-        sim_config.scene_id = self.habitat_config.SCENE
+        # overwrite with our own configuration
+        sim_config.scene_id = self.habitat_config.SCENE_ID
+        sim_config.scene_dataset_config_file = self.habitat_config.SCENE_DATASET
+        sim_config.default_agent_id = self.habitat_config.DEFAULT_AGENT_ID
+        sim_config.random_seed = self.habitat_config.SEED
+        sim_config.scene_light_setup = self.habitat_config.SCENE_LIGHT_SETUP
+
+
         agent_config = habitat_sim.AgentConfiguration()
         overwrite_config(
             config_from=self._get_agent_config(),
@@ -304,6 +314,7 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
                 "start_rotation",
             },
         )
+
 
         sensor_specifications = []
         for sensor in _sensor_suite.sensors.values():
@@ -325,7 +336,9 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
                     ),
                 },
             )
-            sim_sensor_cfg.uuid = sensor.uuid
+            sim_sensor_cfg.position = np.array(sensor.config.POSITION)
+            sim_sensor_cfg.orientation = np.array(sensor.config.ORIENTATION)
+            sim_sensor_cfg.uuid = sensor.config.UUID
             sim_sensor_cfg.resolution = list(
                 sensor.observation_space.shape[:2]
             )
@@ -340,6 +353,7 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
             sensor_specifications.append(sim_sensor_cfg)
 
         agent_config.sensor_specifications = sensor_specifications
+        # TODO: extend action space
         agent_config.action_space = registry.get_action_space_configuration(
             self.habitat_config.ACTION_SPACE_CONFIG
         )(self.habitat_config).get()

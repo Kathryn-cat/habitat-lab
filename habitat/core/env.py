@@ -106,10 +106,10 @@ class Env:
         else:
             self.number_of_episodes = None
 
-        import pdb; pdb.set_trace()
         self._sim = make_sim(
             id_sim=self._config.SIMULATOR.TYPE, config=self._config.SIMULATOR
-        ) # change here
+        )
+        import pdb; pdb.set_trace()
         self._task = make_task(
             self._config.TASK.TYPE,
             config=self._config.TASK,

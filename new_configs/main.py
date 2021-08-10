@@ -7,10 +7,11 @@ import new_configs.utils.simulator as simulator
 import new_configs.utils.visualization as visual
 import new_configs.utils.new_actions as actions
 import new_configs.utils.objects as objects
-import new_configs.utils.new_sims as sims
+import new_configs.utils.new_sim as sims
 
 if __name__ == '__main__':
     cfg = simulator.make_cfg(simulator.settings)
+    import pdb; pdb.set_trace()
     with habitat_sim.Simulator(cfg) as sim:
 
         # initialize agent

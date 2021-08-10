@@ -139,7 +139,7 @@ class ExplSim(HabitatSim):
             "data/replica_cad/configs/lighting/frl_apartment_stage.lighting_config.json"
         )
         obj_attr_mgr = self.get_object_template_manager()
-        obj_attr_mgr.load_configs("data/objects/ycb")
+        obj_attr_mgr.load_configs("datasets/ReplicaCAD/objects/")
 
         self.concur_render = self.habitat_config.get(
             "CONCUR_RENDER", True
@@ -691,7 +691,7 @@ class ExplSim(HabitatSim):
             debug_obs = self.get_sensor_observations()
             obs["high_rgb"] = debug_obs["high_rgb"][:, :, :3]
 
-        if self.habitat_config.HABITAT_SIM_V0.get(
+        if self.habitat_config.EXPL_SIM.get(
             "ENABLE_GFX_REPLAY_SAVE", False
         ):
             self.gfx_replay_manager.save_keyframe()

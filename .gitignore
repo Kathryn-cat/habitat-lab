@@ -100,4 +100,5 @@ episodes_text/
 
 new_configs/utils/__pycache__
 new_configs/output
+habitat/tasks/expl/__pycache__/
 
