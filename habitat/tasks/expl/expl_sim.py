@@ -111,6 +111,7 @@ class ExplSim(HabitatSim):
         self.snapped_obj_constraint_id = []
         self.prev_loaded_navmesh = None
         self.prev_scene_id = None
+        self.robot = None
         self.robot_name = agent_config.ROBOT_URDF.split("/")[-1].split(".")[0]
         self._force_back_pos = None
 

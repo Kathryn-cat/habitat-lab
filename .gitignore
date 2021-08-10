@@ -77,7 +77,16 @@ target/
 .ipynb_checkpoints/
 
 # exclude data from source control by default
-data
+data/cache/
+data/datasets/
+data/new_checkpoints/
+data/objects/
+data/scene_datasets/
+data/replica_cad/
+data/versioned_data/rearrange_pick_dataset_v0_1.0/
+data/versioned_data/replica_cad_dataset_1.0/
+data/versioned_data/ycb_1.0/
+data/default.physics_config.json
 
 # Mac OS-specific storage files
 .DS_Store
