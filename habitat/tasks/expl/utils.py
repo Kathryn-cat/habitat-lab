@@ -15,6 +15,8 @@ import gym
 import magnum as mn
 import numpy as np
 import quaternion
+import cv2
+import skvideo.io
 
 import habitat_sim
 from habitat_sim.nav import NavMeshSettings
@@ -276,3 +278,63 @@ def reshape_obs_space(obs_space, new_shape):
         low=obs_space.high.reshape(-1)[0],
         dtype=obs_space.dtype,
     )
+
+# self-defined functions for generating video of agent motions 
+def agent_motion_img(env, obs, action):
+    rgb = obs['robot_head_rgb'][:, :, ::-1]
+    import pdb; pdb.set_trace()
+
+    # action
+    action = action['action']
+    
+    # agent arm info 
+    joint = np.round(obs['joint'], 3)
+    is_holding = bool(obs['is_holding'])
+    ee_pos = np.round(obs['ee_pos'], 4)
+
+    # agent info
+    state = env._sim.agents[0].state
+    pos = np.round(state.position, 4)
+    rot = np.round(quaternion.as_float_array(state.rotation), 4)
+    force = np.round(state.force, 4)
+
+    # collision and force info
+    accum_force = env._task.accum_force
+    obj_scene_colls = env._task.coll_accum.obj_scene_colls
+    robo_obj_colls = env._task.coll_accum.robo_obj_colls
+    robo_scene_colls = env._task.coll_accum.robo_scene_colls
+
+    # annotate with text
+    blank = np.zeros([850 - 512, 512, 3])
+
+    cv2.putText(blank, f'Action: {action}', (20, 20), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Agent Pos: {pos}', (20, 40), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Agent Rot: {rot}', (20, 60), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Arm Joint: {joint}', (20, 80), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Arm EE Pos: {ee_pos}', (20, 100), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Is Holding: {is_holding}', (20, 120), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Agent Force: {force}', (20, 140), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Accum Force: {accum_force}', (20, 160), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Obj Scene Colls: {obj_scene_colls}', (20, 180), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Robot Obj Colls: {robo_obj_colls}', (20, 200), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Robot Scene Colls: {robo_scene_colls}', (20, 220), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+
+    img = np.concatenate([rgb, blank])
+    return img
+
+def skvideo_from_imgs(imgs, filename):
+    video = np.stack(imgs, axis=0)[:, :, :, ::-1]
+    skvideo_args = dict(inputdict={'-r': str(5)}, outputdict={'-f': 'mp4', '-pix_fmt': 'yuv420p'})
+    skvideo.io.vwrite(filename, video, **skvideo_args)
+
