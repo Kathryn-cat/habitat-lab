@@ -111,15 +111,14 @@ class ExplTask(NavigationTask):
         print(f'collisions: {self.cur_collisions}')
 
         done = False
-        if self.measurements.get_metrics()[RearrangePickSuccess.cls_uuid]:
-            done = True
 
-        # If we have any sort of collision at all the episode is over.
+        '''
         if (
             self._config.MAX_COLLISIONS > 0
             and self.cur_collisions > self._config.MAX_COLLISIONS
         ):
             done = True
+        '''
 
         if self.should_end:
             done = True
@@ -127,12 +126,14 @@ class ExplTask(NavigationTask):
         if self._is_violating_hold_constraint():
             done = True
 
+        '''
         if (
             self._config.FORCE_BASED
             and self.use_max_accum_force > 0
             and self.accum_force > self.use_max_accum_force
         ):
             done = True
+        '''
         return not done
 
     @property

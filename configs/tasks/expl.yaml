@@ -1,11 +1,9 @@
 ENVIRONMENT:
-    MAX_EPISODE_STEPS: 200
+    MAX_EPISODE_STEPS: 1000
 DATASET:
     TYPE: None
 TASK:
     TYPE: ExplTask-v0
-    MAX_ACCUM_FORCE: 5000.0
-    MAX_COLLISIONS: 2000.0 # TODO: do we really need this?
     FIX_BASE_TO_OBJ: None
     FORCE_BASED: True
     COUNT_OBJ_COLLISIONS: True
@@ -29,7 +27,6 @@ TASK:
         TYPE: "LocalizationSensor"
     SENSORS: ["JOINT_SENSOR", "IS_HOLDING_SENSOR", "EE_SENSOR", "LOCAL_SENSOR"]
     POSSIBLE_ACTIONS:
-        - STOP
         - MOVE_FORWARD
         - TURN_LEFT
         - TURN_RIGHT
@@ -107,6 +104,4 @@ SIMULATOR:
     TILT_ANGLE: 15
     TURN_ANGLE: 10
     TYPE: ExplSim 
-
-# TODO: check for pyrobot
 
