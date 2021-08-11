@@ -132,7 +132,6 @@ class Env:
 
     @property
     def current_episode(self) -> Episode:
-        assert self._current_episode is not None
         return self._current_episode
 
     @current_episode.setter
@@ -211,7 +210,6 @@ class Env:
 
         self.reconfigure(self._config)
 
-        import pdb; pdb.set_trace()
         observations = self.task.reset(episode=self.current_episode)
         self._task.measurements.reset_measures(
             episode=self.current_episode,

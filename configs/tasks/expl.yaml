@@ -5,11 +5,11 @@ DATASET:
 TASK:
     TYPE: ExplTask-v0
     MAX_ACCUM_FORCE: 5000.0
-    MAX_COLLISIONS: 2000.0
+    MAX_COLLISIONS: 2000.0 # TODO: do we really need this?
     FIX_BASE_TO_OBJ: None
     FORCE_BASED: True
     COUNT_OBJ_COLLISIONS: True
-    COUNT_ROBO_OBJ_COLLS: False # TODO: check its impact
+    COUNT_ROBO_OBJ_COLLS: True
 
     # In radians
     BASE_ANGLE_NOISE: 0.15
@@ -28,10 +28,6 @@ TASK:
     LOCAL_SENSOR:
         TYPE: "LocalizationSensor"
     SENSORS: ["JOINT_SENSOR", "IS_HOLDING_SENSOR", "EE_SENSOR", "LOCAL_SENSOR"]
-    END_EFFECTOR_TO_OBJECT_DISTANCE:
-        TYPE: "EndEffectorToObjectDistance"
-    MEASUREMENTS:
-        - "END_EFFECTOR_TO_OBJECT_DISTANCE"
     POSSIBLE_ACTIONS:
         - STOP
         - MOVE_FORWARD
