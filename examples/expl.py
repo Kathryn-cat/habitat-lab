@@ -24,7 +24,7 @@ def expl():
             imgs.append(img)
             count_steps += 1
             print(f"count steps: {count_steps}")
-        filename = 'videos/test_2.mp4'
+        filename = 'videos/test_3.mp4'
         utils.skvideo_from_imgs(imgs, filename)
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ import magnum as mn
 import numpy as np
 
 import habitat_sim
+from habitat_sim.simulator import Simulator
 from habitat.core.registry import registry
 from habitat.sims.habitat_simulator.habitat_simulator import HabitatSim
 from habitat.tasks.expl.obj_loaders import (
@@ -639,7 +640,9 @@ class ExplSim(HabitatSim):
 
     def step(self, action):
         self.update_i += 1
+        obs = Simulator.step(self, action)
 
+        '''
         if self.is_render_obs:
             self._try_acquire_context()
             for obj_idx, _ in self.ep_info["targets"]:
@@ -666,8 +669,10 @@ class ExplSim(HabitatSim):
 
         for i in reversed(remove_idxs):
             del self.event_callbacks[i]
+        '''
 
-        if not self.concur_render:
+        '''
+        if not self.concur_render: # here
             if self.habitat_config.get("STEP_PHYSICS", True):
                 for _ in range(self.ac_freq_ratio):
                     self.internal_step(-1)
@@ -684,7 +689,9 @@ class ExplSim(HabitatSim):
 
             self._prev_sim_obs = self.get_sensor_observations_async_finish()
             obs = self._sensor_suite.get_observations(self._prev_sim_obs)
+        '''
 
+        '''
         if "high_rgb" in obs:
             self.is_render_obs = True
             self._try_acquire_context()
@@ -706,6 +713,7 @@ class ExplSim(HabitatSim):
             "ENABLE_GFX_REPLAY_SAVE", False
         ):
             self.gfx_replay_manager.save_keyframe()
+        '''
 
         return obs
 

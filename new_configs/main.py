@@ -11,7 +11,6 @@ import new_configs.utils.new_sim as sims
 
 if __name__ == '__main__':
     cfg = simulator.make_cfg(simulator.settings)
-    import pdb; pdb.set_trace()
     with habitat_sim.Simulator(cfg) as sim:
 
         # initialize agent
@@ -21,8 +20,6 @@ if __name__ == '__main__':
             mn.Quaternion.rotation(mn.Deg(90), mn.Vector3(0.0, 1.0, 0.0))
         )
         sim.initialize_agent(agent_id=0, initial_state=initial_state)
-
-        import pdb; pdb.set_trace()
 
         '''
         # visualization
@@ -46,16 +43,9 @@ if __name__ == '__main__':
         # perform a series of robot motions and make a video
         imgs = []
         for i in range(9):
-            obs = sim.step('look_up')
+            import pdb; pdb.set_trace()
+            obs = sim.step('move_forward')
             img = visual.agent_motion_img(sim, obs)
             imgs.append(img)
-        for i in range(18):
-            obs = sim.step('look_down')
-            img = visual.agent_motion_img(sim, obs)
-            imgs.append(img)
-        for i in range(9):
-            obs = sim.step('look_up')
-            img = visual.agent_motion_img(sim, obs)
-            imgs.append(img)
-        visual.skvideo_from_imgs(imgs, 'agent_motion_v4.mp4')
+        visual.skvideo_from_imgs(imgs, 'agent_motion_v5.mp4')
 

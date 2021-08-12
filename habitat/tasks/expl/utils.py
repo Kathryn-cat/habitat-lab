@@ -301,6 +301,7 @@ def agent_motion_img(env, obs, action):
 
     # collision and force info
     accum_force = env._task.accum_force
+    collided = obs['collided']
     obj_scene_colls = env._task.coll_accum.obj_scene_colls
     robo_obj_colls = env._task.coll_accum.robo_obj_colls
     robo_scene_colls = env._task.coll_accum.robo_scene_colls
@@ -324,11 +325,13 @@ def agent_motion_img(env, obs, action):
                 0.5, (255, 255, 0), 1, cv2.LINE_AA)
     cv2.putText(blank, f'Accum Force: {accum_force}', (20, 160), cv2.FONT_HERSHEY_SIMPLEX, \
                 0.5, (255, 255, 0), 1, cv2.LINE_AA)
-    cv2.putText(blank, f'Obj Scene Colls: {obj_scene_colls}', (20, 180), cv2.FONT_HERSHEY_SIMPLEX, \
+    cv2.putText(blank, f'Collided: {collided}', (20, 180), cv2.FONT_HERSHEY_SIMPLEX, \
                 0.5, (255, 255, 0), 1, cv2.LINE_AA)
-    cv2.putText(blank, f'Robot Obj Colls: {robo_obj_colls}', (20, 200), cv2.FONT_HERSHEY_SIMPLEX, \
+    cv2.putText(blank, f'Obj Scene Colls: {obj_scene_colls}', (20, 200), cv2.FONT_HERSHEY_SIMPLEX, \
                 0.5, (255, 255, 0), 1, cv2.LINE_AA)
-    cv2.putText(blank, f'Robot Scene Colls: {robo_scene_colls}', (20, 220), cv2.FONT_HERSHEY_SIMPLEX, \
+    cv2.putText(blank, f'Robot Obj Colls: {robo_obj_colls}', (20, 220), cv2.FONT_HERSHEY_SIMPLEX, \
+                0.5, (255, 255, 0), 1, cv2.LINE_AA)
+    cv2.putText(blank, f'Robot Scene Colls: {robo_scene_colls}', (20, 240), cv2.FONT_HERSHEY_SIMPLEX, \
                 0.5, (255, 255, 0), 1, cv2.LINE_AA)
 
     img = np.concatenate([rgb, blank])
