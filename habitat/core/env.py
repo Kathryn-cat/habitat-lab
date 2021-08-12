@@ -105,7 +105,6 @@ class Env:
             self.number_of_episodes = len(self._dataset.episodes)
         else:
             self.number_of_episodes = None
-
         self._sim = make_sim(
             id_sim=self._config.SIMULATOR.TYPE, config=self._config.SIMULATOR
         )

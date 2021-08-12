@@ -21,7 +21,7 @@ import skvideo.io
 import habitat_sim
 from habitat_sim.nav import NavMeshSettings
 from habitat_sim.physics import MotionType
-
+from habitat_sim.utils.common import quat_from_magnum
 
 def make_render_only(obj_idx, sim):
     if hasattr(MotionType, "RENDER_ONLY"):
@@ -281,8 +281,9 @@ def reshape_obs_space(obs_space, new_shape):
 
 # self-defined functions for generating video of agent motions 
 def agent_motion_img(env, obs, action):
-    rgb = obs['robot_head_rgb'][:, :, ::-1]
-    import pdb; pdb.set_trace()
+    position = mn.Vector3(0, 0, 3)
+    rotation = quat_from_magnum(mn.Quaternion.rotation(mn.Deg(0), mn.Vector3(0, 1, 0)))
+    rgb = env._sim.get_observations_at(position, rotation)['third_person'][:, :, ::-1]
 
     # action
     action = action['action']

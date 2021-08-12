@@ -268,7 +268,6 @@ class ExplSim(HabitatSim):
 
         self._add_objs(ep_info)
         '''
-        import pdb; pdb.set_trace()
         # TODO: change robot function call type if possible
         # Note: here we initialize the robot urdf into the scene
         if self.robot is None:
@@ -276,7 +275,6 @@ class ExplSim(HabitatSim):
                                     limit_robo_joints=True, fixed_base=False)
             self.robot.reconfigure()
         self.robot.reset()
-        import pdb; pdb.set_trace()
         '''
         set_pos = {}
         # Set articulated object joint states.

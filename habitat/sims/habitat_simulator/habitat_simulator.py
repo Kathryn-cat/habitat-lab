@@ -374,6 +374,7 @@ class HabitatSim(habitat_sim.Simulator, Simulator):
     def _update_agents_state(self) -> bool:
         is_updated = False
         for agent_id, _ in enumerate(self.habitat_config.AGENTS):
+            # TODO: third person camera not correct
             # initialize agent here
             # Note: here the agent is in the initial random position
             agent_cfg = self._get_agent_config(agent_id)
